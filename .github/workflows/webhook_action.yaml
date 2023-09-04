@@ -37,6 +37,11 @@ jobs:
             
             # Parse JSON response and check for status field
             status=$(echo "$response" | jq -r '.status')
+
+            # Print the status for debugging
+            echo "Status:"
+            echo "$status"
+
             
             if [ "$status" == "success" ]; then
               echo "Webhook delivered successfully"
@@ -47,3 +52,5 @@ jobs:
               retry_interval=$((retry_interval * 2))
             fi
           done
+
+
