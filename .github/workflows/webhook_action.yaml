@@ -20,7 +20,7 @@ jobs:
           
       - name: Retry Webhook Delivery
         env:
-          PAYLOAD: ${{ toJson(github.event) }}
+          PAYLOAD: "${{ toJson(github.event) }}"
         run: |
           max_retries=3
           retry_interval=5
