@@ -1,56 +1,30 @@
-name: Webhook Retries
+name: Re-trigger failed webhook payload
 on:
-  push:
-    branches:
-      - develop
+  repository_dispatch:
+    types: [failed_webhook]
 
 jobs:
-  retry-webhook-delivery:
+  retrigger:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Print Commit Information
+      - name: Get webhook payload
+        id: get-payload
+        uses: actions/github-script@v3
+        with:
+          script: |
+            const payload = JSON.parse(github.event.client_payload);
+            const webhookUrl = payload.url;
+            const webhookSecret = payload.secret;
+
+            // Re-trigger the webhook
+            const headers = {
+              'Authorization': `Bearer ${webhookSecret}`,
+            };
+            fetch(webhookUrl, {
+              method: 'POST',
+              headers,
+            });
+
+      - name: Log payload
         run: |
-          echo "Event Payload: ${{ toJson(github.event) }}"
-          
-      - name: Set Environment Variables
-        run: |
-          echo "Setting environment variables"
-          echo "PAYLOAD='${{ toJson(github.event) }}'"
-          
-      - name: Retry Webhook Delivery
-        env:
-          PAYLOAD: "${{ toJson(github.event) }}"
-        run: |
-          max_retries=3
-          retry_interval=5
-          retry_attempt=0
-          WEBHOOK_SECRET="secret123"
-
-          while [ $retry_attempt -lt $max_retries ]; do
-            # Trigger your webhook logic here
-            response=$(curl --max-time 120 -X POST -H "Content-Type: application/json" -H "X-Hub-Signature: sha1=$(echo -n $PAYLOAD | openssl dgst -sha1 -hmac $WEBHOOK_SECRET -binary | openssl enc -base64)" -d "$PAYLOAD" https://dev-developer.fiserv.com/api/github-push)
-
-            # Print response for debugging
-            echo "Response:"
-            echo "$response"
-            
-            # Parse JSON response and check for status field
-            status=$(echo "$response" | jq -r '.status')
-
-            # Print the status for debugging
-            echo "Status:"
-            echo "$status"
-
-            
-            if [ "$status" == "success" ]; then
-              echo "Webhook delivered successfully"
-              break
-            else
-              retry_attempt=$((retry_attempt + 1))
-              sleep $retry_interval
-              retry_interval=$((retry_interval * 2))
-            fi
-          done
-
-
+          echo "Payload: ${{ steps.get-payload.outputs.payload }}"
