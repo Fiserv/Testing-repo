@@ -1,0 +1,49 @@
+name: Webhook Retries
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  retry-webhook-delivery:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Commit Information
+        run: |
+          echo "Event Payload: ${{ toJson(github.event) }}"
+          
+      - name: Set Environment Variables
+        run: |
+          echo "Setting environment variables"
+          echo "PAYLOAD='${{ toJson(github.event) }}'"
+          
+      - name: Retry Webhook Delivery
+        env:
+          PAYLOAD: ${{ toJson(github.event) }}
+        run: |
+          max_retries=3
+          retry_interval=5
+          retry_attempt=0
+          WEBHOOK_SECRET="secret123"
+
+          while [ $retry_attempt -lt $max_retries ]; do
+            # Trigger your webhook logic here
+            response=$(curl --max-time 60 -X POST -H "Content-Type: application/json" -H "X-Hub-Signature: sha1=$(echo -n $PAYLOAD | openssl dgst -sha1 -hmac $WEBHOOK_SECRET -binary | openssl enc -base64)" -d "$PAYLOAD" https://dev-developer.fiserv.com/api/github-push)
+
+            # Print response for debugging
+            echo "Response:"
+            echo "$response"
+            
+            # Parse JSON response and check for status field
+            status=$(echo "$response" | jq -r '.status')
+            
+            if [ "$status" == "success" ]; then
+              echo "Webhook delivered successfully"
+              break
+            else
+              retry_attempt=$((retry_attempt + 1))
+              sleep $retry_interval
+              retry_interval=$((retry_interval * 2))
+            fi
+          done
