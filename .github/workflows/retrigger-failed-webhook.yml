@@ -18,6 +18,12 @@ jobs:
       with:
         python-version: 3.x
 
+    - name: Your Python Script
+      env:
+          YOUR_SECRET: ${{ secrets.TEST_GITHUB_AUTH_TOKEN }}
+      run: |
+          python your_script.py
+
     - name: Install dependencies
       run: pip install -r .github/workflows/requirements.txt
 
