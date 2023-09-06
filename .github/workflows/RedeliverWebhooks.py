@@ -39,7 +39,7 @@ def redeliver_failed_deliveries(hook_id):
     for delivery in deliveries:
         if delivery["status_code"] == 200:
             delivery_id = delivery["id"]
-            print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}")
+            print(f"Deliveries found for delivery ID {delivery_id} corresponding to hook ID {hook_id}")
     
     for delivery in deliveries:
         if delivery["status_code"] == 500:
