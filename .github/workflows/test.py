@@ -44,7 +44,7 @@ def redeliver_failed_deliveries(hook_id):
             response.raise_for_status()
             print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}")
         else:
-            print(f"All good.. Deliveries for delivery ID {delivery_id} for hook ID {hook_id}")
+            print("All good")
             
     # for delivery in deliveries:
     #     if delivery["status_code"] == 200:
