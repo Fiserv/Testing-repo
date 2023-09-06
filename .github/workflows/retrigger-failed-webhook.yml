@@ -24,4 +24,4 @@ jobs:
     - name: Run Python script
       env:
         TEST_GITHUB_AUTH_TOKEN: ${{ secrets.TEST_GITHUB_AUTH_TOKEN }}
-      run: python .github/workflows/test.py
+      run: python .github/workflows/RedeliverWebhooks.py
