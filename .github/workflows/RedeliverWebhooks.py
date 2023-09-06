@@ -35,6 +35,11 @@ def redeliver_failed_deliveries(hook_id):
     response.raise_for_status()
     deliveries = response.json()
     
+
+    for delivery in deliveries:
+        if delivery["status_code"] == 200:
+            delivery_id = delivery["id"]
+            print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}")
     
     for delivery in deliveries:
         if delivery["status_code"] == 500:
@@ -43,14 +48,8 @@ def redeliver_failed_deliveries(hook_id):
             response = requests.post(redeliver_url, headers=headers)
             response.raise_for_status()
             print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}")
-        else:
-            print("All good")
+ 
             
-    # for delivery in deliveries:
-    #     if delivery["status_code"] == 200:
-    #         delivery_id = delivery["id"]
-    #         print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}")
-
 
 if __name__ == "__main__":
     #github_auth_token = os.environ.get("TEST_GITHUB_AUTH_TOKEN")
