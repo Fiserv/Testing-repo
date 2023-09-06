@@ -17,12 +17,11 @@ jobs:
       run: |
         export OWNER="Fiserv"
         export REPO="Testing-repo"
-        export TOKEN="Bearer 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"
         export API="https://api.github.com/repos/$OWNER/$REPO"
 
     - name: Get list of hook IDs
       run: |
-        hooks_response=$(curl -vs -H "Authorization: Bearer $TOKEN" "$API/hooks" 2>&1)
+        hooks_response=$(curl -vs -H "Authorization: Bearer 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" "$API/hooks" 2>&1)
         echo "Response from API:"
         echo "$hooks_response"
         hook_ids=$(echo "$hooks_response" | jq -r '.[].id')
