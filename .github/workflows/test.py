@@ -1,11 +1,6 @@
 import requests
 import json
 
-# Replace these with your GitHub repository information and personal access token
-#owner = "Fiserv"
-#repo = "Testing-repo"
-#token = "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"
-
 # Function to get a list of hook IDs for the repository
 def get_hook_ids():
     url = f"https://api.github.com/repos/Fiserv/Testing-repo/hooks"
@@ -35,12 +30,12 @@ def redeliver_failed_deliveries(hook_id):
     deliveries = response.json()
     
     for delivery in deliveries:
-        if delivery[response][status_code] == 200:
+        if delivery["status_code"] == 200:  # Access the status_code directly from the delivery dictionary
             delivery_id = delivery["id"]
             deliveries_url = f"https://api.github.com/repos/Fiserv/Testing-repo/hooks/{hook_id}/deliveries"
             response = requests.post(deliveries_url, headers=headers)
             response.raise_for_status()
-            print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}")
+            print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}"
 
 if __name__ == "__main__":
     hook_ids = get_hook_ids()
