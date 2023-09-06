@@ -35,20 +35,12 @@ def redeliver_failed_deliveries(hook_id):
     deliveries = response.json()
     
     for delivery in deliveries:
-        if delivery["response"]["status_code"] == 200:
+        if delivery["status_code"] == 200:
             delivery_id = delivery["id"]
             deliveries_url = f"https://api.github.com/repos/Fiserv/Testing-repo/hooks/{hook_id}/deliveries"
             response = requests.post(deliveries_url, headers=headers)
             response.raise_for_status()
             print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}")
-
-    # for delivery in deliveries:
-    #     if delivery["response"]["status"] == 500:
-    #         delivery_id = delivery["id"]
-    #         redeliver_url = f"https://api.github.com/repos/{owner}/{repo}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"
-    #         response = requests.post(redeliver_url, headers=headers)
-    #         response.raise_for_status()
-    #         print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}")
 
 if __name__ == "__main__":
     hook_ids = get_hook_ids()
