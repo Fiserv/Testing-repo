@@ -22,7 +22,6 @@ jobs:
 
     - name: Get list of hook IDs
       run: |
-        set -e  # Fail the script if any command fails
         hooks_response=$(curl -vs -H "Authorization: Bearer $TOKEN" "$API/hooks" 2>&1)
         echo "Response from API:"
         echo "$hooks_response"
