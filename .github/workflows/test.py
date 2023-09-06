@@ -32,8 +32,6 @@ def redeliver_failed_deliveries(hook_id):
     for delivery in deliveries:
         if delivery["status_code"] == 200:
             delivery_id = delivery["id"]
-            deliveries_url = f"https://api.github.com/repos/Fiserv/Testing-repo/hooks/{hook_id}/deliveries
-            response = requests.post(deliveries_url, headers=headers)
             print(f"Redelivered delivery ID {delivery_id} for hook ID {hook_id}")
 
 
