@@ -6,7 +6,7 @@
   "solution": ["financial-institutions"],
   "brandDescription": "Fiserv, Inc. is a global provider of payments and financial services technology solutions. The Company provides account processing and digital banking solutions, card issuer processing and network services, payments, e-commerce, merchant acquiring and processing, and the Clover cloud-based point-of-sale solution. The Company operates through three segments: Merchant Acceptance (Acceptance), Financial Technology (Fintech) and Payments and Network (Payments).",
   "getStartedFilePath": "/docs/getting-started.md",
-  "apiVersions1": [
+  "apiVersions": [
       {
         "version": "1.0.0",
         "versionType": "major",
