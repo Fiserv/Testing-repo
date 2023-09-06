@@ -1,30 +1,26 @@
-name: Re-trigger failed webhook payload
+name: Redeliver Failed GitHub Webhooks
+
 on:
-  repository_dispatch:
-    types: [failed_webhook]
+  push:
+    branches:
+      - develop
 
 jobs:
-  retrigger:
+  redeliver:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Get webhook payload
-        id: get-payload
-        uses: actions/github-script@v3
-        with:
-          script: |
-            const payload = JSON.parse(github.event.client_payload);
-            const webhookUrl = payload.url;
-            const webhookSecret = payload.secret;
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-            // Re-trigger the webhook
-            const headers = {
-              'Authorization': `Bearer ${webhookSecret}`,
-            };
-            fetch(webhookUrl, {
-              method: 'POST',
-              headers,
-            });
+    - name: Set up environment variables
+      run: |
+        export OWNER="Fiserv"
+        export REPO="Testing-repo"
+        export TOKEN="Bearer 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"
+        export API="https://api.github.com/repos/$OWNER/$REPO"
 
-      - name: Log payload
-        run: |
-          echo "Payload: ${{ steps.get-payload.outputs.payload }}"
+    - name: Get list of hook IDs
+      run: |
+        hook_ids=$(curl -s -H "Authorization: Bearer $TOKEN" "$API/hooks" | jq -r '.[].id')
+        echo "Hook IDs: $hook_ids"
