@@ -11,5 +11,7 @@ jobs:
     steps:
       - name: Check webhook status
         run: |
-          curl -X GET "https://dev-developer.fiserv.com/api/github-push"
+          # curl -X GET "https://dev-developer.fiserv.com/api/github-push"
+          WEBHOOK_STATUS=$(curl -I -s -o /dev/null -w "%{http_code}" "https://dev-developer.fiserv.com/api/github-push")
+          echo "Webhook Status: $WEBHOOK_STATUS"
 
