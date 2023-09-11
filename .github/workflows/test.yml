@@ -11,7 +11,5 @@ jobs:
     steps:
       - name: Check webhook status
         run: |
-          # curl -X GET "https://dev-developer.fiserv.com/api/github-push"
-          WEBHOOK_STATUS=$(curl -I -s -o /dev/null -w "%{http_code}" "https://dev-developer.fiserv.com/api/github-push")
+          WEBHOOK_STATUS=$(curl -X POST -H "Authorization: Bearer $TEST_GITHUB_AUTH_TOKEN" -H "Content-Type: application/json" https://api.github.com/repos/Testing-repo/actions/workflows/your-workflow.yml/dispatches -d '{"ref":"develop"}')
           echo "Webhook Status: $WEBHOOK_STATUS"
-
