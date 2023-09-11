@@ -13,7 +13,3 @@ jobs:
         run: |
           curl -X GET ${{ github.event.webhook_url }}
 
-      - name: Only run if the webhook failed
-        if: ${{ !stdout }}
-        run: |
-          echo "The webhook failed!"
