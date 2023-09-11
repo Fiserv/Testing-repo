@@ -6,11 +6,14 @@ on:
       - develop
 
 jobs:
-  check_webhook_status:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Check Webhook Status
-      id: webhook_status
-      run: |
-        echo "The webhook status is: ${{ github.event.webhook_url_status }}"
+      - name: Check webhook status
+        run: |
+          curl -X GET ${{ github.event.webhook_url }}
+
+      - name: Only run if the webhook failed
+        if: ${{ !stdout }}
+        run: |
+          echo "The webhook failed!"
