@@ -1,0 +1,29 @@
+name: Webhook Failure Workflow
+
+on:
+  push:
+    branches:
+      - develop
+  # schedule:
+  #   - cron: '0 * * * *' # Run every hour (can be adjusted as needed)
+
+jobs:
+  check_webhook_status:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Webhook Status
+      id: webhook_status
+      run: |
+        # Your script to check the webhook status (e.g., curl, wget, etc.)
+        # Store the status in an environment variable, e.g., $WEBHOOK_STATUS
+        # Example:
+        # Store the status code in the WEBHOOK_STATUS variable
+        WEBHOOK_STATUS=$(curl -I -s -o /dev/null -w "%{http_code}" $WEBHOOK_URL)
+        echo "Webhook Status: $WEBHOOK_STATUS"
+        if [ "$WEBHOOK_STATUS" != "200" ]; then
+          echo "Webhook failed with status code $WEBHOOK_STATUS. Triggering the workflow."
+          echo "::set-output name=trigger_workflow::true"
+        else
+          echo "Webhook was successful."
+        fi
