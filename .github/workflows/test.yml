@@ -15,11 +15,7 @@ jobs:
     - name: Check Webhook Status
       id: webhook_status
       run: |
-        # Your script to check the webhook status (e.g., curl, wget, etc.)
-        # Store the status in an environment variable, e.g., $WEBHOOK_STATUS
-        # Example:
-        # Store the status code in the WEBHOOK_STATUS variable
-        WEBHOOK_STATUS=$(curl -I -s -o /dev/null -w "%{http_code}" $WEBHOOK_URL)
+        WEBHOOK_STATUS=$(curl -I -s -o /dev/null -w "%{http_code}" "https://dev-developer.fiserv.com/api/github-push")
         echo "Webhook Status: $WEBHOOK_STATUS"
         if [ "$WEBHOOK_STATUS" != "200" ]; then
           echo "Webhook failed with status code $WEBHOOK_STATUS. Triggering the workflow."
