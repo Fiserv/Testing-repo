@@ -15,7 +15,7 @@ jobs:
     - name: Check Webhook Status
       id: webhook_status
       run: |
-        WEBHOOK_STATUS=$(curl -I -s -o /dev/null -w "%{http_code}" "https://dev-developer.fiserv.com/api/github-push")
+        WEBHOOK_STATUS=${{ github.event.webhook_url_status }}
         echo "Webhook Status: $WEBHOOK_STATUS"
         if [ "$WEBHOOK_STATUS" != "200" ]; then
           echo "Webhook failed with status code $WEBHOOK_STATUS. Triggering the workflow."
