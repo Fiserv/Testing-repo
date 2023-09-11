@@ -11,5 +11,5 @@ jobs:
     steps:
       - name: Check webhook status
         run: |
-          curl -X GET ${{ github.event.webhook_url }}
+          curl -X GET "https://dev-developer.fiserv.com/api/github-push"
 
