@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - develop
-  # schedule:
-  #   - cron: '0 * * * *' # Run every hour (can be adjusted as needed)
 
 jobs:
   check_webhook_status:
@@ -15,11 +13,4 @@ jobs:
     - name: Check Webhook Status
       id: webhook_status
       run: |
-        WEBHOOK_STATUS=${{ github.event.webhook_url_status }}
-        echo "Webhook Status: $WEBHOOK_STATUS"
-        if [ "$WEBHOOK_STATUS" != "200" ]; then
-          echo "Webhook failed with status code $WEBHOOK_STATUS. Triggering the workflow."
-          echo "::set-output name=trigger_workflow::true"
-        else
-          echo "Webhook was successful."
-        fi
+        echo "The webhook status is: ${{ github.event.webhook_url_status }}"
